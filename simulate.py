@@ -4,20 +4,18 @@ import pybullet_data
 import pyrosim.pyrosim as pyrosim
 import numpy as np
 import random
+import constants as c
+from simulation import SIMULATION
 
-amplitudeFront = np.pi/4
-amplitudeBack = 0
-frequencyFront = 10
-frequencyBack = 10
-phaseOffsetFront = 0
-phaseOffsetBack = np.pi/4
-physicsClient = p.connect(p.GUI)
-p.setAdditionalSearchPath(pybullet_data.getDataPath())
-p.setGravity(0,0,-9.8)
-planeId = p.loadURDF("plane.urdf")
-robotId = p.loadURDF("body.urdf")
-p.loadSDF("world.sdf")
-pyrosim.Prepare_To_Simulate(robotId)
+simulation = SIMULATION()
+simulation.run()
+"""
+amplitudeFront = c.amplitudeFront
+amplitudeBack = c.amplitudeBack
+frequencyFront = c.frequencyFront
+frequencyBack = c.frequencyBack
+phaseOffsetFront = c.phaseOffsetFront
+phaseOffsetBack = c.phaseOffsetBack
 backLegSensorValues = np.zeros(1000)
 frontLegSensorValues = np.zeros(1000)
 x = np.linspace(0,2*np.pi, 1000)
@@ -38,4 +36,4 @@ p.disconnect()
 print(backLegSensorValues)
 np.save('data/backLegSensorValues.npy', backLegSensorValues)
 np.save('data/frontLegSensorValues.npy', frontLegSensorValues)
-
+"""
