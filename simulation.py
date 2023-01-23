@@ -9,6 +9,7 @@ import time as t
 import numpy as np
 
 
+
 class SIMULATION:
     def __init__(self):
         self.physicsClient = p.connect(p.GUI)
@@ -24,7 +25,8 @@ class SIMULATION:
         for i in range(0, 1000):
             p.stepSimulation()
             self.robot.sense(i)
-            self.robot.act(i)
+            self.robot.think()
+            self.robot.act()
             t.sleep(1 / 2400)
     ##self.sensor.save_values()
     ##self.motor.save_values()
