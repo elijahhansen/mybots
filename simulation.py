@@ -27,7 +27,7 @@ class SIMULATION:
             self.robot.sense(i)
             self.robot.think()
             self.robot.act()
-            t.sleep(1 / 2400)
+            t.sleep(1 / 10000)
     ##self.sensor.save_values()
     ##self.motor.save_values()
 
