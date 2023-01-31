@@ -11,8 +11,11 @@ import numpy as np
 
 
 class SIMULATION:
-    def __init__(self):
-        self.physicsClient = p.connect(p.GUI)
+    def __init__(self, directOrGUI):
+        if directOrGUI == "DIRECT":
+            self.physicsClient = p.connect(p.DIRECT)
+        else:
+            self.physicsClient = p.connect(p.GUI)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.world = WORLD()
         self.robot = ROBOT()
@@ -37,7 +40,12 @@ class SIMULATION:
                                         targetPosition=TargetAnglesBack[i], maxForce=80)
             pyrosim.Set_Motor_For_Joint(bodyIndex=robotId, jointName=b'Torso_FrontLeg', controlMode=p.POSITION_CONTROL,
                                         targetPosition=TargetAnglesFront[i], maxForce=80)
+                                        
             """
+
+    def Get_Fitness(self):
+        self.robot.Get_Fitness()
+
     def __del__(self):
         p.disconnect()
 

@@ -36,7 +36,15 @@ class ROBOT:
                 self.motors[jointName].set_value(self.robotId, desiredAngle)
 
     def think(self):
-        self.nn.Print()
         self.nn.Update()
+
+    def Get_Fitness(self):
+        stateOfLinkZero = p.getLinkState(self.robotId, 0)
+        positionOfLinkZero = stateOfLinkZero[0]
+        xCoordinateOfLinkZero = stateOfLinkZero[0][0]
+        f = open("fitness.txt", "w")
+        f.write(str(xCoordinateOfLinkZero))
+        f.close()
+
 
 
