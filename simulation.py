@@ -12,7 +12,8 @@ import numpy as np
 
 class SIMULATION:
     def __init__(self, directOrGUI):
-        if directOrGUI == "DIRECT":
+        self.directOrGUI = directOrGUI
+        if self.directOrGUI == "DIRECT":
             self.physicsClient = p.connect(p.DIRECT)
         else:
             self.physicsClient = p.connect(p.GUI)
@@ -30,7 +31,8 @@ class SIMULATION:
             self.robot.sense(i)
             self.robot.think()
             self.robot.act()
-            t.sleep(1 / 10000)
+            if self.directOrGUI == "GUI":
+                t.sleep(1 / 10000)
     ##self.sensor.save_values()
     ##self.motor.save_values()
 
