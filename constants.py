@@ -8,3 +8,6 @@ phaseOffsetFront = 0
 phaseOffsetBack = np.pi/4
 numberOfGenerations = 9
 populationSize = 9
+numMotorNeurons = 8
+numSensorNeurons = 9
+motorJointRange = 0.2
