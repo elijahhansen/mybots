@@ -2,10 +2,12 @@ import numpy as np
 import pyrosim.pyrosim as pyrosim
 import random
 import os
+import time as t
 
 
 class SOLUTION:
-    def __init__(self):
+    def __init__(self, nextAvailableID):
+        self.myID = nextAvailableID
         self.weights = np.random.rand(3, 2)
         self.weights = self.weights * 2 - 1
         self.x = 0
@@ -15,14 +17,31 @@ class SOLUTION:
         self.width = 1
         self.height = 1
 
-    def Evaluate(self, method):
+    def Evaluate(self, directOrGUI):
         self.Create_World()
         self.Create_Body()
         self.Create_Brain()
-        os.system(f"python3 simulate.py {method}")
-        f = open("fitness.txt", "r")
+        os.system(f"python3 simulate.py {directOrGUI} {self.myID} 2&>1 &")
+        f = open(f"fitness{self.myID}.txt", "r")
+        while not os.path.exists(f"fitness{self.myID}.txt"):
+            t.sleep(0.01)
+        self.fitness = float(f.read())
+        print(self.fitness)
+        f.close()
+
+    def Start_Simulation(self, directOrGUI):
+        self.Create_World()
+        self.Create_Body()
+        self.Create_Brain()
+        os.system(f"python3 simulate.py {directOrGUI} {self.myID} &")
+
+    def Wait_For_Simulation_To_End(self):
+        while not os.path.exists(f"fitness{self.myID}.txt"):
+            t.sleep(0.01)
+        f = open(f"fitness{self.myID}.txt", "r")
         self.fitness = float(f.read())
         f.close()
+        os.system(f"rm fitness{self.myID}.txt")
 
     def Mutate(self):
         randomRow = random.randint(0, 2)
@@ -46,7 +65,7 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Brain(self):
-        pyrosim.Start_NeuralNetwork("brain.nndf")
+        pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
         pyrosim.Send_Sensor_Neuron(name=0, linkName="Torso")
         pyrosim.Send_Sensor_Neuron(name=1, linkName="BackLeg")
         pyrosim.Send_Sensor_Neuron(name=2, linkName="FrontLeg")
@@ -65,3 +84,5 @@ class SOLUTION:
 
         pyrosim.End()
 
+    def Set_ID(self, ID):
+        self.myID = ID

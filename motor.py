@@ -20,7 +20,6 @@ class MOTOR:
         for i in range(len(self.MotorValues)):
             self.MotorValues[i] = self.amplitude * np.sin(self.frequency * self.MotorValues[i] + self.offset)
 
-        print(self.MotorValues)
 
 
     def set_value(self, robotId, desiredAngle):
