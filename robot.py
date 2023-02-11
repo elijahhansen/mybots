@@ -47,8 +47,11 @@ class ROBOT:
         basePositionAndOrientation = p.getBasePositionAndOrientation(self.robotId)
         basePosition = basePositionAndOrientation[0]
         xPosition = basePosition[0]
-        f = open(f"tmp{self.solutionID}.txt", "w")
-        f.write(str(xPosition))
+       # with open(f"tmp{self.solutionID}.txt", "w")  as txt_file:
+        #    txt_file.write(str(xPosition))
+         #   os.system(f"mv tmp{self.solutionID}.txt fitness{self.solutionID}.txt")
+        f = open(f"tmp{self.solutionID}.txt", "x")
+        f.write(f"{xPosition}")
         os.system(f"mv tmp{self.solutionID}.txt fitness{self.solutionID}.txt")
         f.close()
 
