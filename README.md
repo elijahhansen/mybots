@@ -3,7 +3,7 @@ ludobots repo Snakes
 # Idea 
 The idea behind this project is to generate a random snakes which has body links colored green if it is a sensor and blue if it is not.
 The size of each link is always randomized on a range (0.5,2)
-#Instructions
+# Instructions
 Download the files and type python3 search.py and the simulation should appear with the random snake
 # Images
 ![Notability Notes 2](https://user-images.githubusercontent.com/98726413/218655976-e872df14-512d-45c7-a5c1-bad7d5e2b391.png)
