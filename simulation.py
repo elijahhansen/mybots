@@ -17,6 +17,7 @@ class SIMULATION:
             self.physicsClient = p.connect(p.DIRECT)
         else:
             self.physicsClient = p.connect(p.GUI)
+            p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.world = WORLD()
         self.robot = ROBOT(solutionID)
@@ -32,7 +33,7 @@ class SIMULATION:
             self.robot.think()
             self.robot.act()
             if self.directOrGUI == "GUI":
-                t.sleep(1 / 10000)
+                t.sleep(1 / 1000000000)
     ##self.sensor.save_values()
     ##self.motor.save_values()
 
