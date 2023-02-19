@@ -55,9 +55,9 @@ class SOLUTION:
         os.system(f"rm fitness{self.myID}.txt")
 
     def Mutate(self):
-        randomRow = random.randint(0, c.numMotorNeurons)
-        randomColumn = random.randint(0, 1)
-        self.weights[randomRow, randomColumn] = random.random() * c.numMotorNeurons - 1
+        randomRow = random.randint(0, c.numSensorNeurons-1)
+        randomColumn = random.randint(0, c.numMotorNeurons-1)
+        self.weights[randomRow, randomColumn] = random.random() * c.numSensorNeurons - 1
 
 
 
@@ -68,28 +68,16 @@ class SOLUTION:
 
     def Create_Body(self):
         pyrosim.Start_URDF("body.urdf")
-        bodySize = np.random.rand(3)*1.5 + 0.5
-        if self.boolArray[0] == 1:
-            rgba = '    <color rgba="0 1.0 0 1.0"/>'
-            colorName = '<material name="Green">'
-        else:
-            rgba = '    <color rgba="0 0 1.0 1.0"/>'
-            colorName = '<material name="Blue">'
-
-        pyrosim.Send_Cube(name="Head", pos=[0, 0, 1], size=bodySize, colorName=colorName, rgba=rgba)
+        bodySize = [self.length,self.width,self.width]
+        pyrosim.Send_Cube(name="Head", pos=[0, 0, 1], size=bodySize, colorName='<material name="Green">',
+                          rgba='    <color rgba="0 1.0 0 1.0"/>')
         pyrosim.Send_Joint(name="Head_Body0", parent="Head", child="Body0", type="revolute", jointAxis="0 1 0"
                            , position=[bodySize[0]/-2, 0, 1])
         for i in range(c.numLinks):
-            linkSize = np.random.rand(3) * 1.5 + 0.5
-            if self.boolArray[i+1] == 1:
-                rgba = '    <color rgba="0 1.0 0 1.0"/>'
-                colorName = '<material name="Green">'
-            else:
-                rgba = '    <color rgba="0 0 1.0 1.0"/>'
-                colorName = '<material name="Blue">'
-
-
-            pyrosim.Send_Cube(name=f"Body{i}", pos=[linkSize[0]/-2, 0, 0], size=linkSize, colorName=colorName,rgba=rgba)
+            linkSize = [self.length,self.width,self.width]
+            pyrosim.Send_Cube(name=f"Body{i}", pos=[linkSize[0]/-2, 0, 0], size=linkSize,
+                              colorName='<material name="Green">',
+                              rgba='    <color rgba="0 1.0 0 1.0"/>')
             if i+1 < c.numLinks:
                 pyrosim.Send_Joint(name=f"Body{i}_Body{i+1}",parent=f"Body{i}", child=f"Body{i+1}",
                                type="revolute",jointAxis="0 1 0",position=[linkSize[0]*-1,0,0])
@@ -97,22 +85,16 @@ class SOLUTION:
         pyrosim.End()
     def Create_Brain(self):
         pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
-        count = 0
-        if self.boolArray[0] == 1:
-            pyrosim.Send_Sensor_Neuron(name=count, linkName="Head")
-            count +=1
-        for i in range(count-1):
-            if self.boolArray[i+1] == 1:
-                pyrosim.Send_Sensor_Neuron(name=count, linkName=f"Body{i}")
-                count +=1
-        pyrosim.Send_Motor_Neuron(name=count, jointName="Head_Body0")
-        for i in range(count):
-            pyrosim.Send_Motor_Neuron(name=count+i+1, jointName=f"Body{i}_Body{i+1}")
-            count +=1
+        pyrosim.Send_Sensor_Neuron(name=0, linkName="Head")
+        for i in range(c.numSensorNeurons):
+            pyrosim.Send_Sensor_Neuron(name=i+1, linkName=f"Body{i}")
+        pyrosim.Send_Motor_Neuron(name=c.numSensorNeurons, jointName="Head_Body0")
+        for i in range(c.numMotorNeurons):
+            pyrosim.Send_Motor_Neuron(name=c.numSensorNeurons+i+1, jointName=f"Body{i}_Body{i+1}")
 
-        for currentRow in range(0, count):
-            for currentColumn in range(0,count-1):
-                pyrosim.Send_Synapse(sourceNeuronName=currentRow, targetNeuronName=currentColumn+count,
+        for currentRow in range(0, c.numSensorNeurons):
+            for currentColumn in range(0,c.numMotorNeurons):
+                pyrosim.Send_Synapse(sourceNeuronName=currentRow, targetNeuronName=currentColumn+c.numSensorNeurons,
                                      weight=self.weights[currentRow, currentColumn])
 
         pyrosim.End()
