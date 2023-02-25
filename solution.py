@@ -10,8 +10,7 @@ from plan import PLAN
 class SOLUTION:
     def __init__(self, nextAvailableID):
         self.myID = nextAvailableID
-        self.weights = np.random.rand(c.numSensorNeurons, c.numMotorNeurons)
-        self.weights = self.weights * c.numMotorNeurons - 1
+        self.weights = np.random.rand(c.numSensorNeurons, c.numMotorNeurons) * 2 - 1
         self.x = 0
         self.y = 0
         self.z = 0.5
@@ -19,10 +18,9 @@ class SOLUTION:
         self.width = 1
         self.height = 1
         self.plan = PLAN()
-        self.get_plan = self.plan.Get_Plan()
+        self.links, self.joints = self.plan.Make_Blueprint()
         self.boolArray = self.plan.boolArray
-        self.links = self.get_plan[0]
-        self.joints = self.get_plan[1]
+        self.sensorCount = np.sum(self.boolArray)
 
     def Evaluate(self, directOrGUI):
         self.Create_World()
@@ -73,47 +71,34 @@ class SOLUTION:
         pyrosim.Start_URDF("body.urdf")
         links = self.links
         joints = self.joints
-        print(links)
-        print(joints)
-        pyrosim.Send_Cube(name=links[0].name, pos=links[0].abspos,size=links[0].size,colorName=links[0].colorName,
-                          rgba=links[0].rgba)
-        pyrosim.Send_Joint(name=joints[0].name,parent=joints[0].parent,child=joints[0].child,type=joints[0].jointtype,
-                           position=joints[0].position, jointAxis=joints[0].axis)
-        for link in links:
-            print(link.name)
-            pyrosim.Send_Cube(name=link.name, pos=link.relativepos,size=link.size,
-                              colorName=link.colorName,rgba=link.rgba)
-        for joint in joints:
-            print(joint.name)
-            pyrosim.Send_Joint(name=joint.name, parent=joint.parent, child=joint.child,
-                               type=joint.jointtype,position=joint.position, jointAxis=joint.axis)
+        for i in range(len(links)):
+            print(links[i].name)
+            pyrosim.Send_Cube(name=links[i].name, pos=links[i].pos, size=links[i].size,
+                              colorName=links[i].colorName, rgba=links[i].rgba)
+        for j in range(len(joints)):
+            print(joints[j].name)
+            pyrosim.Send_Joint(name=joints[j].name, parent=joints[j].parent, child=joints[j].child,
+                               type=joints[j].jointtype, position=joints[j].position, jointAxis=joints[j].axis)
         pyrosim.End()
-    def Create_Brain(self):
-        pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
-        count = 0
-        if self.boolArray[0] == 1:
-            pyrosim.Send_Sensor_Neuron(name=count, linkName="Head")
-            print(count, "Head")
-            count += 1
-        for i in range(c.numLinks):
-            if self.boolArray[i+1] == 1:
-                pyrosim.Send_Sensor_Neuron(name=count, linkName=f"Body{i}")
-                print(count, f"Body{i}")
-                count +=1
-        print("end of sensors")
-        sensor_count = count
-        pyrosim.Send_Motor_Neuron(name=count, jointName="Head_Body0")
-        print(count)
-        count += 1
-        for i in range(c.numLinks-1):
-            pyrosim.Send_Motor_Neuron(name=count, jointName=f"Body{i}_Body{i+1}")
-            print(count, f"Body{i}_Body{i+1}")
-            count += 1
-        for currentRow in range(sensor_count):
-            for currentColumn in range(count-sensor_count-1):
-                pyrosim.Send_Synapse(sourceNeuronName=currentRow, targetNeuronName=currentColumn+sensor_count-1,
-                                     weight=self.weights[currentRow, currentColumn])
 
+    def Create_Brain(self):
+        pyrosim.Start_NeuralNetwork(f"brain{0}.nndf")
+        count = 0
+        for i in range(len(self.links) - 1):
+            if self.boolArray[i] == 1:
+                pyrosim.Send_Sensor_Neuron(name=count, linkName=self.links[i].name)
+                count += 1
+
+        print("end of sensors")
+        for j in range(len(self.joints) - 1):
+            pyrosim.Send_Motor_Neuron(name=count + j, jointName=self.joints[j].name)
+
+        weights = np.random.rand(count, c.numMotorNeurons) * 2 - 1
+
+        for currentRow in range(count):
+            for currentColumn in range(c.numMotorNeurons):
+                pyrosim.Send_Synapse(sourceNeuronName=currentRow, targetNeuronName=currentColumn + count,
+                                     weight=weights[currentRow, currentColumn])
         pyrosim.End()
 
     def Set_ID(self, ID):
