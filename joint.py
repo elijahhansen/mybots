@@ -1,9 +1,11 @@
 class JOINT:
-    def __init__(self,name,parent,child,jointtype,axis,pos,prevface):
-        self.name = name
-        self.parent = parent
-        self.child = child
+    def __init__(self,parent,child,jointtype,axis,pos):
+        self.name = f"Body{parent}_Body{child}"
+        self.parent = f"Body{parent}"
+        self.child = f"Body{child}"
         self.jointtype = jointtype
         self.axis = axis
         self.position = pos
-        self.prevface = prevface
+
+    def __str__(self):
+        return f"name={self.name}, position={self.position}"
