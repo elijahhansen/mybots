@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 import constants as c
 from links import LINK
@@ -48,6 +50,46 @@ class PLAN:
                 bool = False
         return bool
 
+    def Calculate_Absolute_Pos(self, links, joints):
+        for i in range(len(links)):
+            if i == 0:
+                absJointPos = [0,0,0]
+            upstreamLink = links[joints[i-1].parentID]
+            upstreamJointPos = upstreamLink.absJointpos
+            absJointPos = np.add(upstreamJointPos, joints[i-1].position)
+            links[i].absJointPos = absJointPos
+            links[i].abspos, links[i].box = links[i].Compute_Box()
+
+    def Mutate_Dimension(self,linkID):
+        linksCopy = copy.deepcopy(self.links)
+        jointsCopy = copy.deepcopy(self.joints)
+        for i in range(4):
+            randomDim = random.choice([0,1,2])
+            randomSize = np.random.rand(1)*1.25 + 0.5
+            prevSize = linksCopy[linkID].size
+            linksCopy[linkID].size[randomDim] = randomSize
+            vecChange = np.subtract(linksCopy[linkID].size, prevSize) * 0.5
+            linksCopy[linkID].pos = np.add(linksCopy[linkID].pos, vecChange)
+            for joint in jointsCopy:
+                if joint.parent == linksCopy[linkID].name and joint.position[randomDim] != 0:
+                    joint.position = np.add(joint.position, vecChange)
+
+            self.Calculate_Absolute_Pos(linksCopy,jointsCopy)
+            for link in linksCopy:
+                if self.Find_Collisions(linksCopy, link):
+                    collided = True
+                else:
+                    continue
+
+            if collided == True:
+                continue
+            else:
+                self.links = copy.deepcopy(linksCopy)
+                self.joints = copy.deepcopy(jointsCopy)
+                mutated = True
+                break
+
+
     def Make_Base_Link(self):
         pos = np.array([0,0,2])
         size = np.random.rand(3)*1.25 + 0.5
@@ -81,88 +123,3 @@ class PLAN:
                 self.linkID -= 1
             else:
                 break
-
-
-"""
-
-    def Get_Plan(self):
-        count = 0
-        headsize = np.random.rand(3)*1.5 + 0.5
-        print(c.numLinks)
-        if self.boolArray[0] == 1:
-            rgba = '    <color rgba="0 1.0 0 1.0"/>'
-            colorName = '<material name="Green">'
-        else:
-            rgba = '    <color rgba="0 0 1.0 1.0"/>'
-            colorName = '<material name="Blue">'
-        self.links.append(LINK(name="Body0", abspos=np.array([0,0,2]),relativepos=np.array([0,0,0]), size=headsize,
-                                       colorName=colorName, rgba=rgba))
-        count += 1
-        body0face = random.choice(range(1))
-        body0jointvec = self.Get_Vec_From_Center(body0face, headsize)
-        self.joints.append(JOINT(parent=0, child=1,
-                                          jointtype="revolute", axis='0 1 0', pos=body0jointvec + np.array([0,0,2]),
-                                 prevface=body0face))
-        for i in range(c.numLinks):
-            nextface = random.choice(range(1))
-            randomLink = random.randint(0,count-1)
-            print(count-1)
-            prevDirection = self.joints[randomLink].prevface
-            prevSize = self.links[randomLink].size
-            prevPos = self.links[randomLink].abspos
-            prevJointPos = self.joints[randomLink].position
-            bodySize = np.random.rand(3)*1.5 + 0.5
-            vecToCenter = self.Get_Vec_From_Center(prevDirection, bodySize)
-            jointToCenter = self.Get_Vec_From_Center(prevDirection, prevSize)
-            print(jointToCenter)
-            nextlinkVec = self.Get_Vec_From_Center(nextface,bodySize)
-            centerToJoint = self.Get_Vec_From_Center(nextface,prevSize)
-            abspos = prevPos+centerToJoint+nextlinkVec
-            nextJointPos = jointToCenter + centerToJoint
-            print(nextJointPos)
-            if randomLink == 0:
-                nextJointPos = np.array([0,0,2]) + centerToJoint
-
-            if self.boolArray[i+1] == 1:
-                rgba = '    <color rgba="0 1.0 0 1.0"/>'
-                colorName = '<material name="Green">'
-            else:
-                rgba = '    <color rgba="0 0 1.0 1.0"/>'
-                colorName = '<material name="Blue">'
-            print(f'Body{count}')
-            self.links.append(LINK(name=f"Body{count}", abspos=abspos,
-                                   relativepos=nextlinkVec, size=bodySize, colorName=colorName, rgba=rgba))
-            count += 1
-            while True:
-                if self.Find_Collisions(self.links, self.links[len(self.links)-1]):
-                    self.links.pop()
-                    count += -1
-                    print(count)
-                    randomLink = random.randint(0,count-1)
-                    nextface = random.choice(range(1))
-                    prevPos = self.links[randomLink].abspos
-                    prevSize = self.links[randomLink].size
-                    prevDirection = self.joints[randomLink].prevface
-                    bodySize = np.random.rand(3) * 1.5 + 0.5
-                    centerToJoint = self.Get_Vec_From_Center(nextface,prevSize)
-                    jointToCenter = self.Get_Vec_From_Center(prevDirection, prevSize)
-                    vecToCenter = self.Get_Vec_From_Center(prevDirection, bodySize)
-                    nextlinkVec = self.Get_Vec_From_Center(nextface, bodySize)
-                    abspos = prevPos + centerToJoint + nextlinkVec
-                    nextJointPos = jointToCenter + centerToJoint
-                    if randomLink == 0:
-                        nextJointPos = np.array([0, 0, 2]) + centerToJoint
-
-                    self.links.append(LINK(name=f"Body{count}", abspos=abspos,
-                                           relativepos=nextlinkVec,size=bodySize, colorName=colorName,rgba=rgba))
-                    count += 1
-                else:
-                    break
-            if i + 1 < c.numLinks:
-                self.joints.append(JOINT(parent=randomLink, child=count,
-                                                  jointtype="revolute", axis='0 1 0', pos=nextJointPos,
-                                         prevface=nextface))
-
-        return self.links, self.joints
-
-"""

@@ -10,7 +10,6 @@ from plan import PLAN
 class SOLUTION:
     def __init__(self, nextAvailableID):
         self.myID = nextAvailableID
-        self.weights = np.random.rand(c.numSensorNeurons, c.numMotorNeurons) * 2 - 1
         self.x = 0
         self.y = 0
         self.z = 0.5
@@ -20,7 +19,8 @@ class SOLUTION:
         self.plan = PLAN()
         self.links, self.joints = self.plan.Make_Blueprint()
         self.boolArray = self.plan.boolArray
-        self.sensorCount = np.sum(self.boolArray)
+        self.sensorCount = int(np.sum(self.boolArray))
+        self.weights = np.random.rand(self.sensorCount, c.numMotorNeurons) * 2 - 1
 
     def Evaluate(self, directOrGUI):
         self.Create_World()
@@ -58,9 +58,14 @@ class SOLUTION:
         os.system(f"rm fitness{self.myID}.txt")
 
     def Mutate(self):
-        randomRow = random.randint(0, c.numMotorNeurons)
-        randomColumn = random.randint(0, 1)
-        self.weights[randomRow, randomColumn] = random.random() * c.numMotorNeurons - 1
+        randomLinkID = np.random.randint(len(self.links))
+        self.plan.Mutate_Dimension(randomLinkID)
+        self.Mutate_Synapse()
+
+    def Mutate_Synapse(self):
+        randomRow = random.randint(0, self.sensorCount - 1)
+        randomColumn = random.randint(0, c.numMotorNeurons - 1)
+        self.weights[randomRow][randomColumn] = random.random() * 2 - 1
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
@@ -68,7 +73,7 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Body(self):
-        pyrosim.Start_URDF("body.urdf")
+        pyrosim.Start_URDF(f"body{self.myID}.urdf")
         links = self.links
         joints = self.joints
         for i in range(len(links)):
@@ -82,23 +87,21 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Brain(self):
-        pyrosim.Start_NeuralNetwork(f"brain{0}.nndf")
+        pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
         count = 0
-        for i in range(len(self.links) - 1):
+        for i in range(c.numSensorNeurons):
             if self.boolArray[i] == 1:
-                pyrosim.Send_Sensor_Neuron(name=count, linkName=self.links[i].name)
+                pyrosim.Send_Sensor_Neuron(name=count, linkName=f"Body{i}")
                 count += 1
 
         print("end of sensors")
-        for j in range(len(self.joints) - 1):
+        for j in range(len(self.joints)):
             pyrosim.Send_Motor_Neuron(name=count + j, jointName=self.joints[j].name)
-
-        weights = np.random.rand(count, c.numMotorNeurons) * 2 - 1
 
         for currentRow in range(count):
             for currentColumn in range(c.numMotorNeurons):
                 pyrosim.Send_Synapse(sourceNeuronName=currentRow, targetNeuronName=currentColumn + count,
-                                     weight=weights[currentRow, currentColumn])
+                                     weight=self.weights[currentRow][currentColumn])
         pyrosim.End()
 
     def Set_ID(self, ID):
