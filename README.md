@@ -10,6 +10,8 @@ The body was mutated by choosing a dimension to alter in each link of the creatu
 # Instructions
 Download the files and run "python3 search.py" in the terminal and the evolutionary algorithm will over 50 generations and at the end show the most fit creature. There will also be a fitness graph availible at graphs/fitness.png
 
+# Images
+
 # Citations
 Ludobots MOOC, Dr. Josh Bongard
 Karl Sims
