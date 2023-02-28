@@ -44,7 +44,7 @@ class PLAN:
             link_box = links[i].Compute_Box()[1]
             if (new_box[0][0] < link_box[0][1] and new_box[0][1] > link_box[0][0] and new_box[1][0] < link_box[1][1]
                     and new_box[1][1] > link_box[1][0] and new_box[2][0] < link_box[2][1]
-                    and new_box[2][1] > link_box[2][0]) or new_box[2][0] < 0:
+                    and new_box[2][1] > link_box[2][0]) or new_box[2][0] < 0 or new_box[2][1] > 5:
                 return True
             else:
                 bool = False
@@ -60,12 +60,12 @@ class PLAN:
             links[i].absJointPos = absJointPos
             links[i].abspos, links[i].box = links[i].Compute_Box()
 
-    def Mutate_Dimension(self,linkID):
+    def Mutate_Dimension(self,linkID,randomDim):
         linksCopy = copy.deepcopy(self.links)
         jointsCopy = copy.deepcopy(self.joints)
-        for i in range(4):
-            randomDim = random.choice([0,1,2])
-            randomSize = np.random.rand(1)*1.25 + 0.5
+        for i in range(5):
+            #each dimension has 33% chance of being mutated
+            randomSize = np.random.random()*1.25 + 0.6
             prevSize = linksCopy[linkID].size
             linksCopy[linkID].size[randomDim] = randomSize
             vecChange = np.subtract(linksCopy[linkID].size, prevSize) * 0.5

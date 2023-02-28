@@ -3,25 +3,49 @@ import constants as c
 import copy
 import os
 import copy
+import numpy as np
+import matplotlib.pyplot as mpl
 
 
 class PARALLEL_HILL_CLIMBER:
-    def __init__(self):
+    def __init__(self,seed):
         os.system("rm brain*.nndf")
         os.system("rm fitness*.txt")
         os.system("rm body*.urdf")
         self.parents = {}
         self.nextAvailableID = 0
+        self.seed = seed
+        np.random.seed(self.seed)
         for i in range(c.populationSize):
             self.parents[i] = SOLUTION(self.nextAvailableID)
             self.nextAvailableID += 1
+
+        self.fitnessList = np.zeros((c.populationSize, c.numberOfGenerations + 1))
         #self.parent = SOLUTION()
 
     def Evolve(self):
         self.Evaluate(self.parents)
+        for member in range(c.populationSize):
+            self.fitnessList[member][0] = self.parents[member].fitness
 
         for currentGeneration in range(c.numberOfGenerations):
             self.Evolve_For_One_Generation()
+            for member in range(c.populationSize):
+                self.fitnessList[member][currentGeneration + 1] = self.parents[member].fitness
+
+    def Save_Data(self):
+        for i in range(c.populationSize):
+            for j in range(c.numberOfGenerations + 1):
+                self.fitnessList[i][j] *= -1
+                if self.fitnessList[i][j] < 0:
+                    self.fitnessList[i][j] = 0
+
+        np.save("data/fitnessValues.npy", self.fitnessList)
+
+        for i in range(len(self.fitnessList)):
+            mpl.plot(self.fitnessList[i], label=f"member #{i + 1}")
+        # matplotlib.pyplot.legend()
+        mpl.savefig(f"graphs/fitness{self.seed}.png", format="png")
 
 
     def Evolve_For_One_Generation(self):
@@ -72,6 +96,6 @@ class PARALLEL_HILL_CLIMBER:
 
     def Evaluate(self, solutions):
         for key in solutions:
-            solutions[key].Start_Simulation("GUI")
+            solutions[key].Start_Simulation("DIRECT")
         for key in solutions:
             solutions[key].Wait_For_Simulation_To_End()

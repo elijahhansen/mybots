@@ -1,15 +1,16 @@
 import numpy as np
+import random
 
 amplitudeFront = np.pi/4
 amplitudeBack = np.pi/4
-frequencyFront = 15.0
+frequencyFront = 10.0
 frequencyBack = 10.0
 phaseOffsetFront = 0
 phaseOffsetBack = np.pi/4
-numberOfGenerations = 10
-populationSize = 1
+numberOfGenerations = 2
+populationSize = 2
 numLinks = np.random.randint(2,9)
 #np.random.randint(2,4)
-numMotorNeurons = numLinks-1
-numSensorNeurons = numLinks
+numMotorNeurons = numLinks
+numSensorNeurons = numLinks+1
 motorJointRange = .5

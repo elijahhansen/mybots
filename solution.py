@@ -19,7 +19,8 @@ class SOLUTION:
         self.plan = PLAN()
         self.links, self.joints = self.plan.Make_Blueprint()
         self.boolArray = self.plan.boolArray
-        self.sensorCount = int(np.sum(self.boolArray))
+        self.sensorCount = np.sum(self.boolArray)
+        print(self.sensorCount)
         self.weights = np.random.rand(self.sensorCount, c.numMotorNeurons) * 2 - 1
 
     def Evaluate(self, directOrGUI):
@@ -58,14 +59,28 @@ class SOLUTION:
         os.system(f"rm fitness{self.myID}.txt")
 
     def Mutate(self):
-        randomLinkID = np.random.randint(len(self.links))
-        self.plan.Mutate_Dimension(randomLinkID)
-        self.Mutate_Synapse()
+        for link in self.links:
+            linkID = link.linkID
+            for dim in range(3):
+                if self.fitness < -3:
+                    randomDimChance = np.random.randint(0,6)
+                elif self.fitness < -6:
+                    randomDimChance = np.random.randint(0,8)
+                else:
+                    randomDimChance = np.random.randint(0,4)
+                if randomDimChance == 0:
+                    self.plan.Mutate_Dimension(linkID,dim)
+        randomSynapseChance = np.random.randint(0,3)
+        if randomSynapseChance == 0:
+            self.Mutate_Synapse()
 
     def Mutate_Synapse(self):
-        randomRow = random.randint(0, self.sensorCount - 1)
-        randomColumn = random.randint(0, c.numMotorNeurons - 1)
-        self.weights[randomRow][randomColumn] = random.random() * 2 - 1
+        odds = 3 / (self.sensorCount * c.numMotorNeurons)
+        for row in range(self.sensorCount):
+            for col in range(c.numMotorNeurons):
+                chance = np.random.rand()
+                if chance <= odds:
+                    self.weights[row][col] = np.random.rand() * 2 - 1
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
@@ -77,11 +92,9 @@ class SOLUTION:
         links = self.links
         joints = self.joints
         for i in range(len(links)):
-            print(links[i].name)
             pyrosim.Send_Cube(name=links[i].name, pos=links[i].pos, size=links[i].size,
                               colorName=links[i].colorName, rgba=links[i].rgba)
         for j in range(len(joints)):
-            print(joints[j].name)
             pyrosim.Send_Joint(name=joints[j].name, parent=joints[j].parent, child=joints[j].child,
                                type=joints[j].jointtype, position=joints[j].position, jointAxis=joints[j].axis)
         pyrosim.End()
@@ -94,7 +107,6 @@ class SOLUTION:
                 pyrosim.Send_Sensor_Neuron(name=count, linkName=f"Body{i}")
                 count += 1
 
-        print("end of sensors")
         for j in range(len(self.joints)):
             pyrosim.Send_Motor_Neuron(name=count + j, jointName=self.joints[j].name)
 
