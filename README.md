@@ -11,6 +11,8 @@ The body was mutated by choosing a dimension to alter in each link of the creatu
 Download the files and run "python3 search.py" in the terminal and the evolutionary algorithm will over 50 generations and at the end show the most fit creature. There will also be a fitness graph availible at graphs/fitness.png
 
 # Images
+[Notability Notes (2).pdf](https://github.com/elijahhansen/mybots/files/10847127/Notability.Notes.2.pdf)
+Visuals for Body Mutation
 
 # Citations
 Ludobots MOOC, Dr. Josh Bongard
