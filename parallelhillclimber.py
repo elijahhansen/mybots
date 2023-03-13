@@ -5,6 +5,7 @@ import os
 import copy
 import numpy as np
 import matplotlib.pyplot as mpl
+import pickle
 
 
 class PARALLEL_HILL_CLIMBER:
@@ -16,6 +17,7 @@ class PARALLEL_HILL_CLIMBER:
         self.nextAvailableID = 0
         self.seed = seed
         np.random.seed(self.seed)
+        os.system(f"rm pickles/run{self.seed}.pkl")
         for i in range(c.populationSize):
             self.parents[i] = SOLUTION(self.nextAvailableID)
             self.nextAvailableID += 1
@@ -93,6 +95,8 @@ class PARALLEL_HILL_CLIMBER:
                 solution = self.parents[key]
 
         print("best:",solution.fitness)
+
+        pickle.dump(solution, open(f"pickles/run{self.seed}.pkl", "wb"))
         solution.Start_Simulation("GUI")
 
         #self.parent.Evaluate("GUI")

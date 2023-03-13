@@ -10,7 +10,7 @@ class PLAN:
     def __init__(self):
         self.links = []
         self.joints = []
-        self.boolArray = np.random.randint(2, size=c.numLinks + 1)
+        self.boolArray = np.random.randint(2, size=c.numLinks + 2)
         self.linkID = 0
         self.jointID = 0
 
