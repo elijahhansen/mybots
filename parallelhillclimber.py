@@ -40,10 +40,13 @@ class PARALLEL_HILL_CLIMBER:
                 if self.fitnessList[i][j] < 0:
                     self.fitnessList[i][j] = 0
 
-        np.save("data/fitnessValues.npy", self.fitnessList)
+        np.save(f"data/fitnessValues{self.seed}.npy", self.fitnessList)
 
         for i in range(len(self.fitnessList)):
             mpl.plot(self.fitnessList[i], label=f"member #{i + 1}")
+            mpl.title(f"Fitness Across {c.numberOfGenerations} Generations, Seed #{self.seed}")
+            mpl.xlabel("Number of Generations")
+            mpl.ylabel("Fitness")
         # matplotlib.pyplot.legend()
         mpl.savefig(f"graphs/fitness{self.seed}.png", format="png")
 
