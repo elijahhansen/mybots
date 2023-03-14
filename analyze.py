@@ -10,7 +10,7 @@ for i in range(10):
     for k in range(c.numberOfGenerations+1):
         best = 0
         for j in range(c.populationSize):
-            if fitnessValues [i][j][k] > fitnessValues[i][best][k]:
+            if fitnessValues[i][j][k] > fitnessValues[i][best][k]:
                 best = j
 
         bestArray.append(fitnessValues[i][best][k])

@@ -31,6 +31,7 @@ class PARALLEL_HILL_CLIMBER:
             self.fitnessList[member][0] = self.parents[member].fitness
 
         for currentGeneration in range(c.numberOfGenerations):
+            print(f"Generation: #{currentGeneration}")
             self.Evolve_For_One_Generation()
             for member in range(c.populationSize):
                 self.fitnessList[member][currentGeneration + 1] = self.parents[member].fitness
@@ -84,9 +85,7 @@ class PARALLEL_HILL_CLIMBER:
 
     def Print(self):
         for key in self.parents:
-            print()
             print("parent:",self.parents[key].fitness, "child:", self.children[key].fitness)
-            print()
 
     def Show_Best(self):
         solution = self.parents[0]

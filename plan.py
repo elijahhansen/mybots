@@ -44,7 +44,7 @@ class PLAN:
             link_box = links[i].Compute_Box()[1]
             if (new_box[0][0] < link_box[0][1] and new_box[0][1] > link_box[0][0] and new_box[1][0] < link_box[1][1]
                     and new_box[1][1] > link_box[1][0] and new_box[2][0] < link_box[2][1]
-                    and new_box[2][1] > link_box[2][0]) or new_box[2][0] < 0 or new_box[2][1] > 5:
+                    and new_box[2][1] > link_box[2][0]) or new_box[2][0] < 0 or new_box[2][1] > 4:
                 return True
             else:
                 bool = False
@@ -53,12 +53,14 @@ class PLAN:
     def Calculate_Absolute_Pos(self, links, joints):
         for i in range(len(links)):
             if i == 0:
-                absJointPos = [0,0,0]
-            upstreamLink = links[joints[i-1].parentID]
-            upstreamJointPos = upstreamLink.absJointpos
-            absJointPos = np.add(upstreamJointPos, joints[i-1].position)
-            links[i].absJointPos = absJointPos
-            links[i].abspos, links[i].box = links[i].Compute_Box()
+                links[i].absJointPos = [0,0,0]
+                links[i].abspos, links[i].box = links[i].Compute_Box()
+            else:
+                upstreamLink = links[joints[i-1].parentID]
+                upstreamJointPos = upstreamLink.absJointpos
+                absJointPos = np.add(upstreamJointPos, joints[i-1].position)
+                links[i].absJointPos = absJointPos
+                links[i].abspos, links[i].box = links[i].Compute_Box()
 
     def Mutate_Dimension(self,linkID,randomDim):
         linksCopy = copy.deepcopy(self.links)

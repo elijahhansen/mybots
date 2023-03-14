@@ -7,7 +7,7 @@ frequencyFront = 10.0
 frequencyBack = 10.0
 phaseOffsetFront = 0
 phaseOffsetBack = np.pi/4
-numberOfGenerations = 10
+numberOfGenerations = 500
 populationSize = 10
 numLinks = np.random.randint(2,9)
 #np.random.randint(2,4)
