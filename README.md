@@ -13,12 +13,12 @@ The body was mutated by choosing a dimension to alter in each link of the creatu
 ### constants.py
 In the `constants.py` file the user is able to control a variety of factors relating to robot's characteristics and even the nature of the evolution of the robot. The user is able to control the number of links the robot will have, the frequency, phase offset, and and amplitude of the motors, the population size and number of generations for evolution, and the range of the joints.
 ### joint.py
-* contains the JOINT class object used in formulating the body plan in `plan.py`
+* contains the `JOINT` class object used in formulating the body plan in `plan.py`
 ### links.py
-* contains the LINK class object used in formulating the body plan in `plan.py`
+* contains the` LINK` class object used in formulating the body plan in `plan.py`
 * has method `Compute_Box` which calculates the bounds of generation of the next body part to ensure no collisions in the body plan
 ### motor.py
-* contains the MOTOR class object and sets motors for each joint in the body 
+* contains the `MOTOR` class object and sets motors for each joint in the body 
 * here, the user can adjust the maxForce of a motor 
 ### parallelhillclimber.py
 * houses the evolutionary algorithm of the robot
@@ -29,13 +29,13 @@ In the `constants.py` file the user is able to control a variety of factors rela
 * collisions and any other 3D constraint for the body are handled in `Find_Collisions`
 * this file also handles any adjustments that need to be made to the body after mutations
 ### robot.py
-* contains the ROBOT class object which sets up the robot's neural network and creates the SENSOR and MOTOR objects for the robot
+* contains the `ROBOT` class object which sets up the robot's neural network and creates the `SENSOR` and `MOTOR` objects for the robot
 * it also writes the fitness of each robot so that we can read it during evolution
 ### search.py
 * acts like our main script
-* requests the user to input a seed number and then runs parallelhillclimber and eventually shows the best robot
+* requests the user to input a seed number and then runs `parallelhillclimber` and eventually shows the best robot
 ### sensor.py
-* contains the SENSOR class object
+* contains the `SENSOR` class object
 * gets and saves sensor values 
 ### show_pickled.py
 * by running `python3 show_pickled.py 0` the best robot from seed 0 will be shown
@@ -43,14 +43,16 @@ In the `constants.py` file the user is able to control a variety of factors rela
 ### simulate.py
 * calls `SIMULATION` methods and decides whether to run simulations in parallel or not
 ### simulation.py
-* contains the SIMULATION class object which holds the methods for running the simulation on screen or directly without the GUI
+* contains the `SIMULATION` class object which holds the methods for running the simulation on screen or directly without the GUI
 * here, the user can modify the length of each run and how the simulations steps 
 ### solution.py
-* contains the SOLUTION class object which holds methods for creating the body, brain, and world
-* here, the 
+* contains the `SOLUTION` class object which holds methods for sending the body, brain, and world to the simulator
+* here, the user can control which sensors get assigned and where, send world objects into scene, and modify how the body mutates 
+### world.py
+* contains the `WORLD` class object which simply loads the `plane.urdf` and `world.sdf` files
 
 # Instructions
-Download the files and run `python3 search.py` in the terminal. Then you will be prompted to enter a seed integer for the random number generator the evolutionary algorithm will run over 500 generations and at the end show the most fit creature after asked to press enter/return. There will also be a fitness graph availible at graphs/fitness{seed}.png .Additionally, after running seeds 0-9, running `python3 analyze.py` there will be a graph summarizing the fitness across each seed in the graphs directory.
+Download the files and run `python3 search.py` in the terminal. Then you will be prompted to enter a seed integer for the random number generator the evolutionary algorithm will run over 500 generations and at the end show the most fit creature after asked to press enter/return. There will also be a fitness graph availible at `graphs/fitness{seed}.png`.Additionally, after running seeds 0-9, running `python3 analyze.py` there will be a graph summarizing the fitness across each seed in the graphs directory.
 
 # Images
 ![Notability Notes 2-1](https://user-images.githubusercontent.com/98726413/221771601-029c5006-a9bb-4147-af74-5f2dac5c7f74.png)
