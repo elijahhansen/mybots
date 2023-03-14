@@ -70,13 +70,17 @@ Download the files and run `python3 search.py` in the terminal. Then you will be
 
 # Figures
 ![bodies](https://user-images.githubusercontent.com/98726413/225148923-85be2f2c-e3f4-4d7f-b06e-7e7bb4a47cb0.png)
-(Figure 1)
+(Figure 1: Body Generation)
 
 ![Notability Notes (5)](https://user-images.githubusercontent.com/98726413/225149178-7d9b1a0c-a906-4323-abe6-962a7ebbb881.png)
-(Figure 2)
+(Figure 2: Body Mutation)
 
 ![Notability Notes (6)](https://user-images.githubusercontent.com/98726413/225149241-4763722f-1348-494d-88f7-d06cee9a71aa.png)
-(Figure 3)
+(Figure 3: Brain Mutation)
+
+![bestFitness](https://user-images.githubusercontent.com/98726413/225163092-90530676-71ef-4921-acd1-2ed733580b60.png)
+(Figure 4: Best Fitness)
+
 
 
 <img width="583" alt="Screen Shot 2023-02-28 at 1 28 20 AM" src="https://user-images.githubusercontent.com/98726413/221784567-98b96d1a-a56c-48d3-8141-bfe53ac73564.png">
