@@ -16,7 +16,7 @@ In the `constants.py` file the user is able to control a variety of factors rela
 * contains the `JOINT` class object used in formulating the body plan in `plan.py`
 ### links.py
 * contains the` LINK` class object used in formulating the body plan in `plan.py`
-* has method `Compute_Box` which calculates the bounds of generation of the next body part to ensure no collisions in the body plan
+* has method `Compute_Box()` which calculates the bounds of generation of the next body part to ensure no collisions in the body plan
 ### motor.py
 * contains the `MOTOR` class object and sets motors for each joint in the body 
 * here, the user can adjust the maxForce of a motor 
@@ -26,7 +26,7 @@ In the `constants.py` file the user is able to control a variety of factors rela
 ### plan.py
 * this is where the blueprint is made for each random body
 * the algoritm is described above: the plan generates links and the appropriate joints until the desired limit is reached
-* collisions and any other 3D constraint for the body are handled in `Find_Collisions`
+* collisions and any other 3D constraint for the body are handled in `Find_Collisions()`
 * this file also handles any adjustments that need to be made to the body after mutations
 ### robot.py
 * contains the `ROBOT` class object which sets up the robot's neural network and creates the `SENSOR` and `MOTOR` objects for the robot
