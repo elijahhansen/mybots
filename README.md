@@ -12,14 +12,16 @@ The brain is a fully connected neural network of sensor and motor neurons with r
 ## Mutation of Bodies
 The body was mutated by choosing a dimension to alter in each link of the creature and setting that dimension to a random size, as seen below in Figure 2. If a link was mutated then the method also ensures that any change in size is met with appropriate changes to the relative positions of the link and any joints around it along with the absolute positions of the creature's links. I also implemented a tier system to the mutation method that decreased the randomness of the mutation when fitness thresholds were met. For example, when the creature evolved past fitness 3 the probability of size mutation decreased by 50% to ensure that smaller changes would occur. 
 ## Mutation of Brain
-The brain is mutated by choosing a random synpase to alter and changing its weight to a random value between -1 and 1 and continues mutating after every fitness threshold.
+The brain is mutated by choosing a random synpase to alter and changing its weight to a random value between -1 and 1 and continues mutating after every fitness threshold; seen in Figure 3.
+## Parallel Hill Climber
+As described in the introduction to this project, the evolutionary algorithm used in this project is the parallel hill climber. This algorithm takes each parent, evolves them and compares each parent to their respective child. If the child is more fit than the parent then it replaces the parent for the next round of evolution. If not, then the parent does not change and moves on to the next generation. Once the generation count has been met (set by the user), the algorithm will go through each parent and find the one that is most fit and show that solution on screen.
 ## Functionality of Files
 ### constants.py
 In the `constants.py` file the user is able to control a variety of factors relating to robot's characteristics and even the nature of the evolution of the robot. The user is able to control the number of links the robot will have, the frequency, phase offset, and and amplitude of the motors, the population size and number of generations for evolution, and the range of the joints.
 ### joint.py
 * contains the `JOINT` class object used in formulating the body plan in `plan.py`
 ### links.py
-* contains the` LINK` class object used in formulating the body plan in `plan.py`
+* contains the `LINK` class object used in formulating the body plan in `plan.py`
 * has method `Compute_Box()` which calculates the bounds of generation of the next body part to ensure no collisions in the body plan
 ### motor.py
 * contains the `MOTOR` class object and sets motors for each joint in the body 
@@ -55,15 +57,27 @@ In the `constants.py` file the user is able to control a variety of factors rela
 ### world.py
 * contains the `WORLD` class object which simply loads the `plane.urdf` and `world.sdf` files
 
+# Results
+Compared to earlier versions of this projects, for example the `evolved_3D_creatures` project, the resulting bodies from evolution were a bit different. Of the 10 resulting bodies, a majority of them were wider than the creatures from `evolved_3D_creatures`. I attribute this to randomness because in this project only 10 parents were used each run and each generation only 1 link is mutated. Thus, I think it is by chance that the creatures took a wider form. I also found that a couple of the bodies were very similar to the previous iteration, which was run using 50 parents across 50 generations, which were pixar lamp type creatures that hop. This design seems like a logical solution to me because it is very efficient. The design usually has only 3 or 4 links and a motor that keeps it bouncing in the negative x-direction. 
+
+Additionally, I found that on some of the fitness graphs the fitness of the robots seemed to flatten out after reaching fitness 3; see the graph for seed 9 for am example. I infer that the tiered mutation system might have had unintended consequences related to the fitness of the robots. The goal of the tiered mutations was to decrease randomness of mutations when the robot was past fitness 3 and 6. However, since the progress flattened out I think that this decrease in probabilty of body mutation might have locked the robot in a local minima when the goal was to ensure this did not happen. However, in most runs I found that the creatures were not affected by this threshold system and actually benefitted from it. I infer this because in most graphs I see sharp increases in fitness followed by gradual improvements in fitness after fitness 3 and 6 that I attribute to tiered mutations.
+
+I also found that the creatures sometimes grew to be too tall and hence kind of rolled to the finish line. I tried to account for this dilemma in my codebase by detecting a collision with an imaginary boundary at z=5 so that the creatures would not get too tall. However, some goofy robots still came from evolution and rolled like rollie pollies.
+
+
 # Instructions
 Download the files and run `python3 search.py` in the terminal. Then you will be prompted to enter a seed integer for the random number generator the evolutionary algorithm will run over 500 generations and at the end show the most fit creature after asked to press enter/return. There will also be a fitness graph availible at `graphs/fitness{seed}.png`.Additionally, after running seeds 0-9, running `python3 analyze.py` there will be a graph summarizing the fitness across each seed in the graphs directory.
 
-# Images
-![Notability Notes 2-1](https://user-images.githubusercontent.com/98726413/221771601-029c5006-a9bb-4147-af74-5f2dac5c7f74.png)
-Visuals for Body Mutation
+# Figures
+![bodies](https://user-images.githubusercontent.com/98726413/225148923-85be2f2c-e3f4-4d7f-b06e-7e7bb4a47cb0.png)
+(Figure 1)
 
-![fitness0](https://user-images.githubusercontent.com/98726413/221784480-3fd12673-90fa-4006-b995-31a1fc7ec2fd.png)
-Example fitness graph
+![Notability Notes (5)](https://user-images.githubusercontent.com/98726413/225149178-7d9b1a0c-a906-4323-abe6-962a7ebbb881.png)
+(Figure 2)
+
+![Notability Notes (6)](https://user-images.githubusercontent.com/98726413/225149241-4763722f-1348-494d-88f7-d06cee9a71aa.png)
+(Figure 3)
+
 
 <img width="583" alt="Screen Shot 2023-02-28 at 1 28 20 AM" src="https://user-images.githubusercontent.com/98726413/221784567-98b96d1a-a56c-48d3-8141-bfe53ac73564.png">
 Example creature (evolved)
