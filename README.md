@@ -3,6 +3,8 @@ Evolved 3D Creatures by Elijah Hansen
 
 ![ezgif com-resize](https://user-images.githubusercontent.com/98726413/225178044-6b2971c1-b814-4de5-b955-9aa5e29eee24.gif)
 
+# Summary Video
+https://youtu.be/kDumBztHQlQ
 
 # Main Idea
 The idea behind this project is to expand upon the my existing 3D creatures codebase for evolution. The goal is to implement mutation methods that can randomly change the body and brain and ensure the positioning of the links/joints of the creatures stay intact and evolve to be fit creatures. The creature's fitness function is the negative x direction, so the most fit creature will travel the farthest in the negative x direction. The parallel hill climber was the evolutionary algoritm used in this project which takes each parent of the population, in this case 10 parents, mutates each one, evaluates whether the resulting child is more fit and select's the better of the parent/child pair. The evolutionary algorithm will run for a population of 10 creatures over 500 generations over 10 seeds to numpy's random number generator (50,000 simulations) to ensure both genetic diversity and proper evolution of the bodies and brain. Genetic diversity is very important in evolution because population need variety and random mutations to ensure progress over time.
@@ -61,15 +63,15 @@ In the `constants.py` file the user is able to control a variety of factors rela
 * contains the `WORLD` class object which simply loads the `plane.urdf` and `world.sdf` files
 
 # Results
-Compared to earlier versions of this projects, for example the `evolved_3D_creatures` project, the resulting bodies from evolution were a bit different. Of the 10 resulting bodies, a majority of them were wider than the creatures from `evolved_3D_creatures`. I attribute this to randomness because in this project only 10 parents were used each run and each generation only 1 link is mutated. Thus, I think it is by chance that the creatures took a wider form. I also found that a couple of the bodies were very similar to the previous iteration, which was run using 50 parents across 50 generations, which were pixar lamp type creatures that hop. This design seems like a logical solution to me because it is very efficient. The design usually has only 3 or 4 links and a motor that keeps it bouncing in the negative x-direction. 
+Compared to earlier versions of this projects, for example the `evolved_3D_creatures` project, the resulting bodies from evolution were a bit different. Of the 10 resulting bodies, a majority of them were wider than the creatures from `evolved_3D_creatures`. I attribute this to randomness because in this project only 10 parents were used each run and each generation only 1 link is mutated. Thus, I think it is by chance that the creatures took a wider form. I also found that a couple of the bodies were very similar to the previous iteration, which was run using 50 parents across 50 generations, which were Pixar lamp type creatures that hop. This design seems like a logical solution to me because it is very efficient. The design usually has only 3 or 4 links and a motor that keeps it bouncing in the negative x-direction. 
 
-Additionally, I found that on some of the fitness graphs the fitness of the robots seemed to flatten out after reaching fitness 3; see the graph for seed 9 for am example. I infer that the tiered mutation system might have had unintended consequences related to the fitness of the robots. The goal of the tiered mutations was to decrease randomness of mutations when the robot was past fitness 3 and 6. However, since the progress flattened out I think that this decrease in probabilty of body mutation might have locked the robot in a local minima when the goal was to ensure this did not happen. However, in most runs I found that the creatures were not affected by this threshold system and actually benefitted from it. I infer this because in most graphs I see sharp increases in fitness followed by gradual improvements in fitness after fitness 3 and 6 that I attribute to tiered mutations.
+Additionally, I found that on some of the fitness graphs the fitness of the robots seemed to flatten out after reaching fitness 3; see the graph for seed 9 for am example (Figure 6). I infer that the tiered mutation system might have had unintended consequences related to the fitness of the robots. The goal of the tiered mutations was to decrease randomness of mutations when the robot was past fitness 3 and 6. However, since the progress flattened out I think that this decrease in probabilty of body mutation might have locked the robot in a local minima when the goal was to ensure this did not happen. However, in most runs I found that the creatures were not affected by this threshold system and actually benefitted from it. I infer this because in most graphs I see sharp increases in fitness followed by gradual improvements in fitness after fitness 3 and 6 that I attribute to tiered mutations.
 
 I also found that the creatures sometimes grew to be too tall and hence kind of rolled to the finish line. I tried to account for this dilemma in my codebase by detecting a collision with an imaginary boundary at z=5 so that the creatures would not get too tall. However, some goofy robots still came from evolution and rolled like rollie pollies.
 
 
 # Instructions
-Download the files and run `python3 search.py` in the terminal. Then you will be prompted to enter a seed integer for the random number generator the evolutionary algorithm will run over 500 generations and at the end show the most fit creature after asked to press enter/return. There will also be a fitness graph availible at `graphs/fitness{seed}.png`.Additionally, after running seeds 0-9, running `python3 analyze.py` there will be a graph summarizing the fitness across each seed in the graphs directory.
+Download the files and run `python3 search.py` in the terminal. Then you will be prompted to enter a seed integer for the random number generator the evolutionary algorithm will run over 500 generations and at the end show the most fit creature after asked to press enter/return. There will also be a fitness graph availible at `graphs/fitness{seed}.png`. Additionally, after running seeds 0-9, running `python3 analyze.py` there will be a graph summarizing the fitness across each seed in the graphs directory.
 
 # Figures
 ![bodies](https://user-images.githubusercontent.com/98726413/225148923-85be2f2c-e3f4-4d7f-b06e-7e7bb4a47cb0.png)
@@ -84,6 +86,11 @@ Download the files and run `python3 search.py` in the terminal. Then you will be
 ![bestFitness](https://user-images.githubusercontent.com/98726413/225163092-90530676-71ef-4921-acd1-2ed733580b60.png)
 (Figure 4: Best Fitness)
 
+![fitness0](https://user-images.githubusercontent.com/98726413/225204973-a11b7bc4-9950-45b0-bdc1-be125b24895c.png)
+(Figure 5)
+
+![fitness9](https://user-images.githubusercontent.com/98726413/225205015-35ff07a0-fb7d-4a04-b8d1-c6b63db3157b.png)
+(Figure 6)
 
 
 <img width="583" alt="Screen Shot 2023-02-28 at 1 28 20 AM" src="https://user-images.githubusercontent.com/98726413/221784567-98b96d1a-a56c-48d3-8141-bfe53ac73564.png">
