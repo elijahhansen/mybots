@@ -1,6 +1,9 @@
 # mybots
 Evolved 3D Creatures by Elijah Hansen
 
+![gif_AdobeExpress](https://user-images.githubusercontent.com/98726413/225175927-3d9d2794-29d6-49d0-b287-68f3c3ad00a8.gif)
+
+
 # Main Idea
 The idea behind this project is to expand upon the my existing 3D creatures codebase for evolution. The goal is to implement mutation methods that can randomly change the body and brain and ensure the positioning of the links/joints of the creatures stay intact and evolve to be fit creatures. The creature's fitness function is the negative x direction, so the most fit creature will travel the farthest in the negative x direction. The parallel hill climber was the evolutionary algoritm used in this project which takes each parent of the population, in this case 10 parents, mutates each one, evaluates whether the resulting child is more fit and select's the better of the parent/child pair. The evolutionary algorithm will run for a population of 10 creatures over 500 generations over 10 seeds to numpy's random number generator (50,000 simulations) to ensure both genetic diversity and proper evolution of the bodies and brain. Genetic diversity is very important in evolution because population need variety and random mutations to ensure progress over time.
 
