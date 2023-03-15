@@ -1,7 +1,7 @@
 # mybots
 Evolved 3D Creatures by Elijah Hansen
 
-![gif_AdobeExpress](https://user-images.githubusercontent.com/98726413/225175927-3d9d2794-29d6-49d0-b287-68f3c3ad00a8.gif)
+![ezgif com-resize](https://user-images.githubusercontent.com/98726413/225178044-6b2971c1-b814-4de5-b955-9aa5e29eee24.gif)
 
 
 # Main Idea
